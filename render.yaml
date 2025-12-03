@@ -22,7 +22,6 @@ services:
   - type: cron
     name: daily-signal-generation
     runtime: python
-    plan: free
     schedule: "15 2 * * *"  # 2:15 AM UTC daily
     buildCommand: pip install -r requirements.txt
     startCommand: python run_pipeline.py
