@@ -169,6 +169,61 @@ def health():
     return status
 
 
+@app.route("/admin/init-db")
+def admin_init_db():
+    """
+    Admin endpoint to initialize database schema.
+    Useful when Shell access is not available (free tier).
+    """
+    if not DB_AVAILABLE:
+        return {"status": "error", "message": "Database not available"}, 400
+    
+    try:
+        init_database()
+        return {
+            "status": "success",
+            "message": "Database schema initialized successfully"
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": f"Failed to initialize database: {str(e)}"
+        }, 500
+
+
+@app.route("/admin/run-pipeline")
+def admin_run_pipeline():
+    """
+    Admin endpoint to trigger the data pipeline.
+    Note: This runs synchronously and may take several minutes.
+    For production, use the cron job instead.
+    """
+    if not DB_AVAILABLE:
+        return {"status": "error", "message": "Database not available"}, 400
+    
+    try:
+        import subprocess
+        import threading
+        
+        def run_pipeline():
+            subprocess.run(["python", "run_pipeline.py"], check=False)
+        
+        # Run in background thread to avoid timeout
+        thread = threading.Thread(target=run_pipeline)
+        thread.daemon = True
+        thread.start()
+        
+        return {
+            "status": "started",
+            "message": "Pipeline started in background. Check logs for progress."
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": f"Failed to start pipeline: {str(e)}"
+        }, 500
+
+
 if __name__ == "__main__":
     # Get PORT from environment (Render sets this) or default to 5001
     PORT = int(os.environ.get('PORT', 5001))
