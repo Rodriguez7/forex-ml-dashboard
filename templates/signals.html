@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forex ML Trading Signals</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .stat-box {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .table-container {
+            padding: 30px;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th {
+            background: #343a40;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #dee2e6;
+            font-size: 0.95em;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+            transition: background 0.2s ease;
+        }
+        
+        .pair {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #495057;
+        }
+        
+        .long {
+            color: #28a745;
+            font-weight: bold;
+            font-size: 1.05em;
+        }
+        
+        .short {
+            color: #dc3545;
+            font-weight: bold;
+            font-size: 1.05em;
+        }
+        
+        .confidence {
+            font-weight: 600;
+        }
+        
+        .confidence-high {
+            color: #28a745;
+        }
+        
+        .confidence-medium {
+            color: #ffc107;
+        }
+        
+        .confidence-low {
+            color: #6c757d;
+        }
+        
+        .price {
+            font-family: 'Courier New', monospace;
+            color: #495057;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 0.9em;
+            border-top: 2px solid #e9ecef;
+        }
+        
+        .disclaimer {
+            margin-top: 10px;
+            font-size: 0.85em;
+            color: #dc3545;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            table {
+                font-size: 0.85em;
+            }
+            
+            th, td {
+                padding: 10px 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Forex ML Trading Signals</h1>
+            <p>Optimized LightGBM Model | Regime-Aware | Cross-Pair Correlation</p>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-value">{{ num_signals }}</div>
+                <div class="stat-label">Total Signals</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" style="color: #28a745;">{{ num_long }}</div>
+                <div class="stat-label">Long Positions</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" style="color: #dc3545;">{{ num_short }}</div>
+                <div class="stat-label">Short Positions</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" style="font-size: 1.2em; color: #666;">{{ timestamp }}</div>
+                <div class="stat-label">Last Updated</div>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pair</th>
+                        <th>Direction</th>
+                        <th>Confidence</th>
+                        <th>Entry</th>
+                        <th>Take Profit</th>
+                        <th>Stop Loss</th>
+                        <th>Risk:Reward</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in signals %}
+                    <tr>
+                        <td class="pair">{{ s['symbol'] }}</td>
+                        <td class="{{ 'long' if s['direction']=='LONG' else 'short' }}">
+                            {{ s['direction'] }}
+                        </td>
+                        <td class="confidence {% if s['confidence'] > 0.6 %}confidence-high{% elif s['confidence'] > 0.52 %}confidence-medium{% else %}confidence-low{% endif %}">
+                            {{ (s['confidence'] * 100) | round(1) }}%
+                        </td>
+                        <td class="price">{{ "%.5f" | format(s['entry_price']) }}</td>
+                        <td class="price">{{ "%.5f" | format(s['tp_price']) }}</td>
+                        <td class="price">{{ "%.5f" | format(s['sl_price']) }}</td>
+                        <td>1:{{ s['risk_reward_ratio'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="footer">
+            <p><strong>Model:</strong> LightGBM Optimized (Optuna 100 trials) | <strong>Features:</strong> 45 (Regime + Cross-Pair)</p>
+            <p><strong>Backtested Performance:</strong> Profit Factor 1.5-1.8 | Sharpe 1.5-4.4</p>
+            <p class="disclaimer">
+                ⚠️ DISCLAIMER: These signals are for research and educational purposes only. 
+                Always validate independently and use proper risk management.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+
+
+

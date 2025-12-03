@@ -1,0 +1,47 @@
+# Environment
+.env
+venv/
+env/
+ENV/
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+
+# Data (too large for git)
+data/raw/
+data/ohlcv/
+data/features/
+data/backtests/
+data/signals/
+
+# Models - allow these (small, needed for deployment)
+# data/models/*.pkl
+# data/models/*.txt
+!data/models/*.pkl
+!data/models/*.txt
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Distribution
+dist/
+build/
+*.egg-info/
+
+
+
+

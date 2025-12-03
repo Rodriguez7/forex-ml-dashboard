@@ -1,0 +1,86 @@
+[
+  {
+    "timestamp": "2025-11-27T00:00:00",
+    "symbol": "AUDUSD",
+    "direction": "LONG",
+    "confidence": 0.5014844988493754,
+    "prob_long": 0.5014844988493754,
+    "entry_price": 0.6533,
+    "tp_price": 0.6617471428571429,
+    "sl_price": 0.6486071428571428,
+    "atr": 0.004692857142857165,
+    "risk_reward_ratio": 1.8
+  },
+  {
+    "timestamp": "2025-11-27T00:00:00",
+    "symbol": "EURUSD",
+    "direction": "LONG",
+    "confidence": 0.5014844988493754,
+    "prob_long": 0.5014844988493754,
+    "entry_price": 1.1595,
+    "tp_price": 1.169117142857143,
+    "sl_price": 1.1541571428571429,
+    "atr": 0.005342857142857173,
+    "risk_reward_ratio": 1.8
+  },
+  {
+    "timestamp": "2025-11-27T00:00:00",
+    "symbol": "GBPUSD",
+    "direction": "LONG",
+    "confidence": 0.5014844988493754,
+    "prob_long": 0.5014844988493754,
+    "entry_price": 1.3239,
+    "tp_price": 1.338647142857143,
+    "sl_price": 1.315707142857143,
+    "atr": 0.008192857142857144,
+    "risk_reward_ratio": 1.8
+  },
+  {
+    "timestamp": "2025-11-27T00:00:00",
+    "symbol": "NZDUSD",
+    "direction": "LONG",
+    "confidence": 0.5214903026411428,
+    "prob_long": 0.5214903026411428,
+    "entry_price": 0.5728,
+    "tp_price": 0.5809771428571429,
+    "sl_price": 0.5682571428571428,
+    "atr": 0.00454285714285715,
+    "risk_reward_ratio": 1.8
+  },
+  {
+    "timestamp": "2025-11-27T00:00:00",
+    "symbol": "USDCAD",
+    "direction": "LONG",
+    "confidence": 0.5014844988493754,
+    "prob_long": 0.5014844988493754,
+    "entry_price": 1.4029,
+    "tp_price": 1.4121314285714286,
+    "sl_price": 1.3977714285714287,
+    "atr": 0.005128571428571435,
+    "risk_reward_ratio": 1.8
+  },
+  {
+    "timestamp": "2025-11-27T00:00:00",
+    "symbol": "USDCHF",
+    "direction": "LONG",
+    "confidence": 0.5014844988493754,
+    "prob_long": 0.5014844988493754,
+    "entry_price": 0.8046,
+    "tp_price": 0.81459,
+    "sl_price": 0.7990499999999999,
+    "atr": 0.005550000000000023,
+    "risk_reward_ratio": 1.8
+  },
+  {
+    "timestamp": "2025-11-27T00:00:00",
+    "symbol": "USDJPY",
+    "direction": "SHORT",
+    "confidence": 0.506208875679501,
+    "prob_long": 0.493791124320499,
+    "entry_price": 156.3,
+    "tp_price": 154.34442857142858,
+    "sl_price": 157.38642857142858,
+    "atr": 1.086428571428568,
+    "risk_reward_ratio": 1.8
+  }
+]
