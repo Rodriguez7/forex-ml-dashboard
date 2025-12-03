@@ -3,7 +3,7 @@
 
 services:
   # PostgreSQL Database (Free Tier)
-  - type: postgresql
+  - type: pg
     name: forex-signals-db
     plan: free
     databaseName: forex_signals
