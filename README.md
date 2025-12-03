@@ -164,14 +164,31 @@ pip install -r requirements.txt
 
 1. Visit [Alpha Vantage](https://www.alphavantage.co/support/#api-key)
 2. Sign up for a free API key (25 requests/day, 5 requests/minute)
-3. Copy `.env.example` to `.env`:
+3. Create a `.env` file in the project root:
    ```bash
-   cp .env.example .env
+   touch .env
    ```
 4. Edit `.env` and add your API key:
    ```
    ALPHA_VANTAGE_API_KEY=your_actual_api_key_here
    ```
+
+### 3. Set Up Database (Optional but Recommended)
+
+The system uses **Supabase** (PostgreSQL-compatible) for storing trading signals.
+
+**Quick Setup:**
+1. Create a free account at [Supabase](https://supabase.com)
+2. Create a new project
+3. Get your connection string from Project Settings → Database
+4. Add to `.env`:
+   ```
+   DATABASE_URL=postgresql://postgres:[password]@db.[ref].supabase.co:5432/postgres
+   ```
+
+**See [SUPABASE_SETUP.md](SUPABASE_SETUP.md) for detailed instructions.**
+
+> **Note**: If `DATABASE_URL` is not set, signals will be saved to JSON files in `data/signals/` instead.
 
 ## 📊 Usage
 

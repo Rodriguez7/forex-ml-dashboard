@@ -5,15 +5,17 @@ Complete step-by-step guide to deploy the Forex ML Dashboard to Render's free ti
 ## Overview
 
 This guide deploys:
-- **PostgreSQL Database** (free tier) - stores trading signals
 - **Flask Web Service** (free tier) - displays the dashboard
 - **Cron Job** (free tier) - generates signals daily at 2:15 AM UTC
+- **Supabase Database** (external) - stores trading signals
 
 ## Prerequisites
 
 1. **GitHub Account** - Your code must be in a GitHub repository
 2. **Render Account** - Sign up at https://render.com (free tier available)
-3. **Alpha Vantage API Key** - Get from https://www.alphavantage.co/support/#api-key
+3. **Supabase Account** - Sign up at https://supabase.com (free tier available)
+4. **Alpha Vantage API Key** - Get from https://www.alphavantage.co/support/#api-key
+5. **Supabase Database** - Already set up with connection string ready
 
 ## Step 1: Prepare Your Repository
 
@@ -63,42 +65,38 @@ If you have `render.yaml` in your repository:
 
 3. **Review Blueprint:**
    - Render will detect `render.yaml`
-   - You'll see 3 services:
-     - PostgreSQL Database (`forex-signals-db`)
+   - You'll see 2 services:
      - Web Service (`forex-signals-dashboard`)
      - Cron Job (`daily-signal-generation`)
 
 4. **Click "Apply"** to create all services
 
 5. **Set Environment Variables:**
-   - Go to Web Service → Environment
+   
+   **For Web Service (`forex-signals-dashboard`):**
+   - Go to Web Service → Environment tab
    - Add: `ALPHA_VANTAGE_API_KEY` = `YOUR_API_KEY_HERE`
-   - The `DATABASE_URL` is automatically set by Render
-
-6. **Set Cron Job Environment Variables:**
-   - Go to Cron Job → Environment
+   - Add: `DATABASE_URL` = `your_supabase_connection_string`
+     - Format: `postgresql://postgres:[PASSWORD]@db.[REF].supabase.co:5432/postgres`
+     - Get from: Supabase Dashboard → Settings → Database → Connection string (Session mode)
+   
+   **For Cron Job (`daily-signal-generation`):**
+   - Go to Cron Job → Environment tab
    - Add: `ALPHA_VANTAGE_API_KEY` = `YOUR_API_KEY_HERE`
-   - The `DATABASE_URL` is automatically set by Render
+   - Add: `DATABASE_URL` = `your_supabase_connection_string` (same as above)
 
-7. **Wait for deployment** (5-10 minutes for first deploy)
+6. **Wait for deployment** (5-10 minutes for first deploy)
 
 ## Step 4: Manual Deployment (Alternative)
 
 If you prefer manual setup:
 
-### 4.1 Create PostgreSQL Database
+**Note:** This deployment uses Supabase database (external). Make sure you have:
+- Supabase account and project created
+- Supabase connection string ready
+- See [SUPABASE_SETUP.md](SUPABASE_SETUP.md) for Supabase setup
 
-1. **Go to Dashboard** → Click "New" → "PostgreSQL"
-2. **Settings:**
-   - Name: `forex-signals-db`
-   - Database: `forex_signals`
-   - User: `forex_user`
-   - Region: Choose closest to you
-   - Plan: **Free**
-3. **Click "Create Database"**
-4. **Note the connection string** (Internal Database URL) - you'll need this
-
-### 4.2 Create Web Service
+### 4.1 Create Web Service
 
 1. **Go to Dashboard** → Click "New" → "Web Service"
 2. **Connect Repository:**
@@ -109,7 +107,7 @@ If you prefer manual setup:
 3. **Settings:**
    - Name: `forex-signals-dashboard`
    - Environment: **Python 3**
-   - Region: Same as database
+   - Region: Choose closest to you
    - Branch: `main`
    - Root Directory: leave empty
    - Build Command: `pip install -r requirements.txt`
@@ -120,7 +118,9 @@ If you prefer manual setup:
    - Click "Advanced" → "Add Environment Variable"
    - Key: `PYTHON_VERSION`, Value: `3.11.0`
    - Key: `ALPHA_VANTAGE_API_KEY`, Value: `YOUR_API_KEY_HERE`
-   - Key: `DATABASE_URL`, Value: (copy from PostgreSQL Internal Database URL)
+   - Key: `DATABASE_URL`, Value: `your_supabase_connection_string`
+     - Format: `postgresql://postgres:[PASSWORD]@db.[REF].supabase.co:5432/postgres`
+     - Get from: Supabase Dashboard → Settings → Database → Connection string (Session mode)
 
 5. **Click "Create Web Service"**
 
@@ -137,7 +137,7 @@ If you prefer manual setup:
 3. **Settings:**
    - Name: `daily-signal-generation`
    - Environment: **Python 3**
-   - Region: Same as database
+   - Region: Choose closest to you
    - Schedule: `15 2 * * *` (2:15 AM UTC daily)
    - Build Command: `pip install -r requirements.txt`
    - Start Command: `python run_pipeline.py`
@@ -146,7 +146,7 @@ If you prefer manual setup:
 4. **Environment Variables:**
    - Key: `PYTHON_VERSION`, Value: `3.11.0`
    - Key: `ALPHA_VANTAGE_API_KEY`, Value: `YOUR_API_KEY_HERE`
-   - Key: `DATABASE_URL`, Value: (copy from PostgreSQL Internal Database URL)
+   - Key: `DATABASE_URL`, Value: `your_supabase_connection_string` (same as Web Service)
 
 5. **Click "Create Cron Job"**
 
@@ -226,8 +226,10 @@ After deployment, you need to populate the database with initial data:
 
 **Solution:**
 1. Verify `DATABASE_URL` environment variable is set in Web Service and Cron Job
-2. Copy the Internal Database URL from PostgreSQL service
-3. Use Internal Database URL (not External) for Render services
+2. Check Supabase connection string format: `postgresql://postgres:[PASSWORD]@db.[REF].supabase.co:5432/postgres`
+3. Ensure password is URL-encoded if it contains special characters
+4. Verify Supabase database is running and accessible
+5. Check Supabase dashboard for connection issues or IP restrictions
 
 ### Model files not found
 
@@ -284,8 +286,13 @@ After deployment, you need to populate the database with initial data:
 
 ### Render Free Tier:
 - **Web Service**: Spins down after 15 minutes of inactivity (cold start ~30-60 seconds)
-- **PostgreSQL**: 90 days retention, 256MB storage
 - **Cron Jobs**: Run on schedule, may have delays
+
+### Supabase Free Tier:
+- **Database Size**: 500 MB
+- **Bandwidth**: 2 GB/month
+- **Connections**: Up to 60 direct connections, unlimited pooled
+- **Retention**: Generous free tier limits
 
 ### Alpha Vantage Free Tier:
 - **Rate Limits**: 25 calls/day, 5 calls/minute
@@ -328,8 +335,7 @@ If you retrain models locally:
 - Cron Job → Logs: View detailed logs
 
 ### Check Database:
-- PostgreSQL → Metrics: View storage usage
-- PostgreSQL → Logs: View database logs
+- Supabase → Dashboard: View database usage and logs
 
 ### Health Endpoint:
 - Visit: `https://your-url.onrender.com/health`
@@ -345,7 +351,7 @@ If you retrain models locally:
 ## Cost Estimate
 
 **Free Tier:**
-- PostgreSQL: $0/month
+- Supabase: $0/month (free tier)
 - Web Service: $0/month
 - Cron Job: $0/month
 - **Total: $0/month**
@@ -366,13 +372,13 @@ If you retrain models locally:
 ## Support
 
 - **Render Docs**: https://render.com/docs
-- **PostgreSQL Docs**: https://render.com/docs/databases
+- **Supabase Docs**: https://supabase.com/docs
 - **Alpha Vantage Docs**: https://www.alphavantage.co/documentation/
 
 ## Success Checklist
 
 - [ ] Repository pushed to GitHub with model files
-- [ ] PostgreSQL database created
+- [ ] Supabase database configured and connection string ready
 - [ ] Web service deployed and accessible
 - [ ] Cron job created and scheduled
 - [ ] Environment variables set (API key, database URL)

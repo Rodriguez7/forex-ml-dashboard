@@ -1,8 +1,9 @@
 # src/database.py
 """
-PostgreSQL database module for storing and retrieving trading signals.
+Supabase database module for storing and retrieving trading signals.
 
 Handles database connections, schema initialization, and signal CRUD operations.
+Supabase is built on PostgreSQL, so we use standard PostgreSQL drivers.
 """
 
 import os
@@ -17,6 +18,9 @@ from contextlib import contextmanager
 def get_database_url() -> Optional[str]:
     """
     Get database URL from environment variable.
+    
+    Supports Supabase connection strings (PostgreSQL-compatible).
+    Format: postgresql://user:password@host:port/database
     
     Returns:
         Database URL string or None if not set
@@ -119,7 +123,7 @@ def init_database():
 
 def save_signals_db(signals: List[Dict]) -> bool:
     """
-    Save signals to PostgreSQL database.
+    Save signals to Supabase database.
     
     Args:
         signals: List of signal dictionaries

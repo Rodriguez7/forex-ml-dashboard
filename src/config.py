@@ -52,8 +52,8 @@ RISK_PER_TRADE = 0.01       # 1% equity per trade
 ALPHA_VANTAGE_API_KEY = os.getenv("ALPHA_VANTAGE_API_KEY")
 ALPHA_VANTAGE_BASE_URL = "https://www.alphavantage.co/query"
 
-# Database configuration (PostgreSQL)
-DATABASE_URL = os.getenv("DATABASE_URL")  # Render provides this automatically
+# Database configuration (Supabase)
+DATABASE_URL = os.getenv("DATABASE_URL")  # Supabase connection string (PostgreSQL-compatible)
 
 def is_database_available() -> bool:
     """

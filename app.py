@@ -3,7 +3,7 @@
 Flask Web Application for Forex ML Trading Signals Dashboard
 
 Displays the latest ML-generated trading signals in a clean web interface.
-Uses PostgreSQL database if available (Render deployment), falls back to JSON files (local development).
+Uses Supabase database if available, falls back to JSON files (local development).
 """
 
 import os
@@ -64,7 +64,7 @@ def load_latest_signal_file():
 
 def load_latest_signals_from_db():
     """
-    Load latest signals from PostgreSQL database.
+    Load latest signals from Supabase database.
     
     Returns:
         Tuple of (signals list, timestamp string) or (None, None) if unavailable
@@ -180,7 +180,7 @@ if __name__ == "__main__":
     print(f"\nStarting Flask web server on port {PORT}...")
     
     if DB_AVAILABLE:
-        print("✓ Database: Available (PostgreSQL)")
+        print("✓ Database: Available (Supabase)")
     else:
         print("⚠️  Database: Unavailable (using JSON files)")
     

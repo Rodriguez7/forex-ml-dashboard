@@ -1,14 +1,8 @@
 # render.yaml
 # Render Blueprint configuration for Forex ML Dashboard
+# Uses Supabase database (configured externally)
 
 services:
-  # PostgreSQL Database (Free Tier)
-  - type: pg
-    name: forex-signals-db
-    plan: free
-    databaseName: forex_signals
-    user: forex_user
-
   # Flask Web Service
   - type: web
     name: forex-signals-dashboard
@@ -22,9 +16,7 @@ services:
       - key: ALPHA_VANTAGE_API_KEY
         sync: false  # Set manually in Render dashboard
       - key: DATABASE_URL
-        fromDatabase:
-          name: forex-signals-db
-          property: connectionString
+        sync: false  # Set manually in Render dashboard with Supabase connection string
 
   # Cron Job for Daily Signal Generation
   - type: cron
@@ -40,7 +32,5 @@ services:
       - key: ALPHA_VANTAGE_API_KEY
         sync: false  # Set manually in Render dashboard
       - key: DATABASE_URL
-        fromDatabase:
-          name: forex-signals-db
-          property: connectionString
+        sync: false  # Set manually in Render dashboard with Supabase connection string
 

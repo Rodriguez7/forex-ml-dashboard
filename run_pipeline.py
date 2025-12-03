@@ -140,7 +140,7 @@ def main():
     try:
         from src.database import is_database_available
         if is_database_available():
-            print("\nNew signals have been generated and saved to PostgreSQL database")
+            print("\nNew signals have been generated and saved to Supabase database")
         else:
             print("\nNew signals have been generated and saved to data/signals/")
     except:
